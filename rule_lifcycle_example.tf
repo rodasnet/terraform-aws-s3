@@ -3,7 +3,7 @@ resource "aws_s3_bucket" "example" {
 }
 
 resource "aws_s3_bucket_lifecycle_configuration" "lifecycle_rule" {
-  for_each = { for rule in var.s3_bucket_lifecycle_rules : rule.id => rule }
+  for_each = { for rule in var.lifecycle_rules : rule.id => rule }
 
   bucket = aws_s3_bucket.example.id
 
@@ -16,7 +16,16 @@ resource "aws_s3_bucket_lifecycle_configuration" "lifecycle_rule" {
       for_each = each.value.filter != null ? [each.value.filter] : []
       content {
         prefix = filter.value.prefix
-        # tags   = filter.value.tags
+
+        dynamic "tag" {
+          for_each = filter.value.tag != null ? [filter.value.tag] : []
+
+          content {
+            key   = tag.key
+            value = tag.value
+          }
+
+        }
       }
     }
 
@@ -24,8 +33,8 @@ resource "aws_s3_bucket_lifecycle_configuration" "lifecycle_rule" {
     dynamic "expiration" {
       for_each = each.value.expiration != null ? [each.value.expiration] : []
       content {
-        date          = expiration.value.date
-        days          = expiration.value.days
+        date = expiration.value.date
+        days = expiration.value.days
         # delete_marker = expiration.value.delete_marker
       }
     }
