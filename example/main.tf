@@ -4,18 +4,30 @@ module "bucket" {
   name = "example-bucket-e4c3"
 }
 
-module "bucket_with_lifecycle_minimal" {
-  source = "../"
+resource "aws_s3_bucket_lifecycle_configuration" "example" {
+  bucket = module.bucket.bucket_id
 
-  name = "example-bucket-4u3d"
+  rule {
+    id = "rule-1"
 
-  lifecycle_rules = [
-    {
-      id     = "example-rule"
-      status = "Enabled"
-    }
-  ]
+    # ... other transition/expiration actions ...
+
+    status = "Enabled"
+  }
 }
+
+# module "bucket_with_lifecycle_minimal" {
+#   source = "../"
+
+#   name = "example-bucket-4u3d"
+
+#   lifecycle_rules = [
+#     {
+#       id     = "example-rule"
+#       status = "Enabled"
+#     }
+#   ]
+# }
 
 
 # module "bucket" {

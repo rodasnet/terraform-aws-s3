@@ -11,23 +11,66 @@ resource "aws_s3_bucket_lifecycle_configuration" "lifecycle_rule" {
     id     = each.value.id
     status = each.value.status
 
-    # Filter block
     dynamic "filter" {
-      for_each = each.value.filter != null ? [each.value.filter] : []
+      for_each = each.value.filter != null && (
+        each.value.filter.prefix != null ||
+        each.value.filter.tag != null ||
+        each.value.filter.object_size_greater_than != null ||
+        each.value.filter.object_size_less_than != null
+      ) ? [each.value.filter] : []
+
       content {
         prefix = filter.value.prefix
 
         dynamic "tag" {
           for_each = filter.value.tag != null ? [filter.value.tag] : []
-
           content {
-            key   = tag.key
-            value = tag.value
+            key   = tag.value.key
+            value = tag.value.value
           }
-
         }
       }
     }
+
+    # Filter block Copilot example
+    # dynamic "filter" {
+    #   for_each = each.value.filter != null && (
+    #     each.value.filter.prefix != null ||
+    #     each.value.filter.tag != null ||
+    #     each.value.filter.object_size_greater_than != null ||
+    #     each.value.filter.object_size_less_than != null
+    #   ) ? [each.value.filter] : []
+
+    #   content {
+    #     prefix = filter.value.prefix
+
+    #     dynamic "tag" {
+    #       for_each = filter.value.tag != null ? [filter.value.tag] : []
+    #       content {
+    #         key   = tag.value.key
+    #         value = tag.value.value
+    #       }
+    #     }
+    #   }
+    # }
+
+    # Filter block simple example
+    # dynamic "filter" {
+    #   for_each = each.value.filter != null ? [each.value.filter] : []
+    #   content {
+    #     prefix = filter.value.prefix
+
+    #     dynamic "tag" {
+    #       for_each = filter.value.tag != null ? [filter.value.tag] : []
+
+    #       content {
+    #         key   = tag.key
+    #         value = tag.value
+    #       }
+
+    #     }
+    #   }
+    # }
 
     # Expiration block
     dynamic "expiration" {

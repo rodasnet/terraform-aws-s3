@@ -4,11 +4,11 @@ variable "lifecycle_rules" {
     status = string            # Required: Whether the rule is Enabled or Disabled
     filter = optional(object({ # Optional: Used to identify objects the rule applies to
       prefix                   = optional(string)
-      tag                      = optional(map(string))
+      tag                      = optional(map(string),)
     #   and                      = optional(object())
       object_size_greater_than = optional(map(any))
       object_size_less_than    = optional(map(any))
-    }), {})
+    }))
     expiration = optional(object({     # Optional: Specifies expiration configuration
       date          = optional(string) # Expiration date in ISO 8601 format
       days          = optional(number) # Expiration in days
