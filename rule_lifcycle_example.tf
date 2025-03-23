@@ -11,26 +11,36 @@ resource "aws_s3_bucket_lifecycle_configuration" "lifecycle_rule" {
     id     = each.value.id
     status = each.value.status
 
+    # When filter is empty provide default prefix of root "/" and empty tag
     dynamic "filter" {
-      for_each = each.value.filter != null && (
-        each.value.filter.prefix != null ||
-        each.value.filter.tag != null ||
-        each.value.filter.object_size_greater_than != null ||
-        each.value.filter.object_size_less_than != null
-      ) ? [each.value.filter] : []
-
+      for_each = each.value.filter == null ? [{
+        prefix = "/"
+      }] : []
       content {
         prefix = filter.value.prefix
-
-        dynamic "tag" {
-          for_each = filter.value.tag != null ? [filter.value.tag] : []
-          content {
-            key   = tag.value.key
-            value = tag.value.value
-          }
-        }
       }
     }
+
+    # dynamic "filter" {
+    #   for_each = try(each.value.filter, null) != null && (
+    #     try(each.value.filter.prefix, null) != null ||
+    #     try(each.value.filter.tag, null) != null ||
+    #     try(each.value.filter.object_size_greater_than, null) != null ||
+    #     try(each.value.filter.object_size_less_than, null) != null
+    #   ) ? [each.value.filter] : []
+
+    #   content {
+    #     prefix = filter.value.prefix
+
+    #     dynamic "tag" {
+    #       for_each = filter.value.tag != null ? [filter.value.tag] : []
+    #       content {
+    #         key   = tag.value.key
+    #         value = tag.value.value
+    #       }
+    #     }
+    #   }
+    # }
 
     # Filter block Copilot example
     # dynamic "filter" {
@@ -55,22 +65,22 @@ resource "aws_s3_bucket_lifecycle_configuration" "lifecycle_rule" {
     # }
 
     # Filter block simple example
-    # dynamic "filter" {
-    #   for_each = each.value.filter != null ? [each.value.filter] : []
-    #   content {
-    #     prefix = filter.value.prefix
+    dynamic "filter" {
+      for_each = each.value.filter != null ? [each.value.filter] : []
+      content {
+        prefix = filter.value.prefix
 
-    #     dynamic "tag" {
-    #       for_each = filter.value.tag != null ? [filter.value.tag] : []
+        dynamic "tag" {
+          for_each = filter.value.tag != null ? [filter.value.tag] : []
 
-    #       content {
-    #         key   = tag.key
-    #         value = tag.value
-    #       }
+          content {
+            key   = tag.key
+            value = tag.value
+          }
 
-    #     }
-    #   }
-    # }
+        }
+      }
+    }
 
     # Expiration block
     dynamic "expiration" {
