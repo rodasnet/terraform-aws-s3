@@ -21,56 +21,26 @@ module "bucket_with_lifecycle_minimal" {
   ]
 }
 
-  #   REPLECATED ERROR:
-  #   ╷
-  # │ Warning: Invalid Attribute Combination
-  # │
-  # │   with module.bucket_with_lifecycle.aws_s3_bucket_lifecycle_configuration.lifecycle_rule["example-rule"],
-  # │   on ..\rule_lifcycle_example.tf line 10, in resource "aws_s3_bucket_lifecycle_configuration" "lifecycle_rule":
-  # │   10:   rule {
-  # │
-  # │ 2 attributes specified when one (and only one) of
-  # │ [rule[0].filter[0].prefix.<.object_size_greater_than,rule[0].filter[0].prefix.<.object_size_less_than,rule[0].filter[0].prefix.<.and,rule[0].filter[0].prefix.<.tag] is required
-  # │
-  # │ This will be an error in a future version of the provider
-# module "bucket_with_lifecycle_09ik" {
-#   source = "../"
+module "bucket_with_lifecycle_09ik" {
+  source = "../"
 
-#   name = "example-bucket-09ik"
+  name = "example-bucket-09ik"
 
-#   lifecycle_rules = [
-#     {
-#       id     = "rule-09ik"
-#       status = "Enabled"
-#       filter = {
-#         # prefix = "09ik/"
-#         tag = {
-#           key   = "example-key"
-#           value = "example-value"
-#         }
-#       }
-#       expiration = {
-#         date = "2023-01-13T00:00:00Z"
-#         days = 30
-#       }
-#       transition = [
-#         {
-#           days          = 60
-#           storage_class = "GLACIER"
-#         }
-#       ]
-#       noncurrent_version_expiration = {
-#         noncurrent_days = 90
-#       }
-#       noncurrent_version_transition = [
-#         {
-#           storage_class   = "STANDARD_IA"
-#           noncurrent_days = 120
-#         }
-#       ]
-#       abort_incomplete_multipart_upload = {
-#         days_after_initiation = 7
-#       }
-#     }
-#   ]
-# }
+  lifecycle_rules = [
+    {
+      id     = "rule-09ik"
+      status = "Enabled"
+      filter = {
+        tag = {
+          key   = "example-key"
+          value = "example-value"
+        }
+      }
+      expiration = {
+        # TODO: Fix date input format
+        # date = "2023-01-13T00:00:00Z"
+        days = 30
+      }
+    }
+  ]
+}

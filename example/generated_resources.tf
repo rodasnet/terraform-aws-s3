@@ -58,3 +58,31 @@ resource "aws_s3_bucket_lifecycle_configuration" "rule_01" {
 #     }
 #   }
 # }
+
+resource "aws_s3_bucket" "spaghettimaghetti2" {
+  bucket = "spaghettimaghetti2"
+}
+
+resource "aws_s3_bucket_lifecycle_configuration" "spaghettimaghetti2" {
+  bucket                                 = aws_s3_bucket.spaghettimaghetti2.id
+  expected_bucket_owner                  = null
+  transition_default_minimum_object_size = "all_storage_classes_128K"
+  rule {
+    id     = "rule_02"
+    status = "Enabled"
+
+    # Minimum configuration for a rule
+    filter {
+      tag {
+        key   = "example-key"
+        value = "example-value"
+      }
+    }
+
+    expiration {
+      date = null
+      days = 1
+      # expired_object_delete_marker = false
+    }
+  }
+}

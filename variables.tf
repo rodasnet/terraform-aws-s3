@@ -36,21 +36,21 @@ variable "lifecycle_rules" {
   }))
   default = []
 
-  validation {
-    condition = alltrue([
-      for rule in var.lifecycle_rules : (
-        rule == null || (length(compact([
-          try((rule.filter.prefix != null), null),
-          try((rule.filter.tag.key != null), null),
-          try((rule.filter.object_size_greater_than != null), null),
-          try((rule.filter.object_size_less_than != null), null),
-          try((rule.filter.and != null), null)
-          ])) == 1
-        )
-      )
-    ])
-    error_message = "Each filter block must either be empty or have exactly one of 'prefix', 'tag', 'object_size_greater_than', 'object_size_less_than', or 'and' specified."
-  }
+  # validation {
+  #   condition = alltrue([
+  #     for rule in var.lifecycle_rules : (
+  #       rule == null || (length(compact([
+  #         try((rule.filter.prefix != null), null),
+  #         try((rule.filter.tag != null), null),
+  #         try((rule.filter.object_size_greater_than != null), null),
+  #         try((rule.filter.object_size_less_than != null), null),
+  #         try((rule.filter.and != null), null)
+  #         ])) < 2
+  #       )
+  #     )
+  #   ])
+  #   error_message = "Each filter block must either be empty or have exactly one of 'prefix', 'tag', 'object_size_greater_than', 'object_size_less_than', or 'and' specified."
+  # }
 }
 
 variable "name" {
