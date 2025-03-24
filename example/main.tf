@@ -4,37 +4,6 @@ module "bucket" {
   name = "example-bucket-e4c3"
 }
 
-
-# ╷
-# │ Warning: Invalid Attribute Combination
-# │
-# │   with aws_s3_bucket_lifecycle_configuration.example,
-# │   on main.tf line 26, in resource "aws_s3_bucket_lifecycle_configuration" "example":
-# │   26:   rule {
-# │
-# │ No attribute specified when one (and only one) of [rule[0].prefix.<.filter] is required
-# │
-# │ This will be an error in a future version of the provider
-# │
-# │ (and one more similar warning elsewhere)
-
-# resource "aws_s3_bucket_lifecycle_configuration" "example" {
-#   bucket = module.bucket.bucket_id
-
-#   rule {
-#     id = "rule-1"
-
-#     # ... other transition/expiration actions ...
-
-#     status = "Enabled"
-#   }
-# }
-
-# import {
-#   to = aws_s3_bucket_lifecycle_configuration.rule_01
-#   id = "spaghettimaghetti1"
-# }
-
 module "bucket_with_lifecycle_minimal" {
   source = "../"
 
@@ -52,42 +21,36 @@ module "bucket_with_lifecycle_minimal" {
   ]
 }
 
-
-# module "bucket" {
+  #   REPLECATED ERROR:
+  #   ╷
+  # │ Warning: Invalid Attribute Combination
+  # │
+  # │   with module.bucket_with_lifecycle.aws_s3_bucket_lifecycle_configuration.lifecycle_rule["example-rule"],
+  # │   on ..\rule_lifcycle_example.tf line 10, in resource "aws_s3_bucket_lifecycle_configuration" "lifecycle_rule":
+  # │   10:   rule {
+  # │
+  # │ 2 attributes specified when one (and only one) of
+  # │ [rule[0].filter[0].prefix.<.object_size_greater_than,rule[0].filter[0].prefix.<.object_size_less_than,rule[0].filter[0].prefix.<.and,rule[0].filter[0].prefix.<.tag] is required
+  # │
+  # │ This will be an error in a future version of the provider
+# module "bucket_with_lifecycle_09ik" {
 #   source = "../"
 
-#   name = "example-bucket-e4c3"
-# }
-# module "bucket_with_lifecycle" {
-#   source = "../"
+#   name = "example-bucket-09ik"
 
-#   name = "example-bucket-4u3d"
-
-#   #   REPLECATED ERROR:
-#   #   ╷
-#   # │ Warning: Invalid Attribute Combination
-#   # │
-#   # │   with module.bucket_with_lifecycle.aws_s3_bucket_lifecycle_configuration.lifecycle_rule["example-rule"],
-#   # │   on ..\rule_lifcycle_example.tf line 10, in resource "aws_s3_bucket_lifecycle_configuration" "lifecycle_rule":
-#   # │   10:   rule {
-#   # │
-#   # │ 2 attributes specified when one (and only one) of
-#   # │ [rule[0].filter[0].prefix.<.object_size_greater_than,rule[0].filter[0].prefix.<.object_size_less_than,rule[0].filter[0].prefix.<.and,rule[0].filter[0].prefix.<.tag] is required
-#   # │
-#   # │ This will be an error in a future version of the provider
 #   lifecycle_rules = [
 #     {
-#       id     = "example-rule"
+#       id     = "rule-09ik"
 #       status = "Enabled"
 #       filter = {
-#         prefix = "example-prefix"
+#         # prefix = "09ik/"
 #         tag = {
 #           key   = "example-key"
 #           value = "example-value"
 #         }
 #       }
 #       expiration = {
-#         date = "2022-01-01"
+#         date = "2023-01-13T00:00:00Z"
 #         days = 30
 #       }
 #       transition = [
@@ -111,10 +74,3 @@ module "bucket_with_lifecycle_minimal" {
 #     }
 #   ]
 # }
-
-
-# # module "bucket" {
-# #   source = "../"
-
-# #   name = "example-bucket-e4c3"
-# # }

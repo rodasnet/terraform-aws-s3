@@ -3,11 +3,16 @@ variable "lifecycle_rules" {
     id     = string            # Required: Unique identifier for the rule (max 255 characters)
     status = string            # Required: Whether the rule is Enabled or Disabled
     filter = optional(object({ # Optional: Used to identify objects the rule applies to
-      prefix                   = optional(string)
-      tag                      = optional(map(string))
-    #   and                      = optional(object())
+      prefix = optional(string)
+      tag = optional(object({
+        key   = string
+        value = string
+      }))
       object_size_greater_than = optional(map(any))
       object_size_less_than    = optional(map(any))
+      and = optional(object({
+        prefix = optional(string)
+      tags = optional(map(any)) }))
     }))
     expiration = optional(object({     # Optional: Specifies expiration configuration
       date          = optional(string) # Expiration date in ISO 8601 format
@@ -30,6 +35,22 @@ variable "lifecycle_rules" {
     }))
   }))
   default = []
+
+  validation {
+    condition = alltrue([
+      for rule in var.lifecycle_rules : (
+        rule == null || (length(compact([
+          try((rule.filter.prefix != null), null),
+          try((rule.filter.tag.key != null), null),
+          try((rule.filter.object_size_greater_than != null), null),
+          try((rule.filter.object_size_less_than != null), null),
+          try((rule.filter.and != null), null)
+          ])) == 1
+        )
+      )
+    ])
+    error_message = "Each filter block must either be empty or have exactly one of 'prefix', 'tag', 'object_size_greater_than', 'object_size_less_than', or 'and' specified."
+  }
 }
 
 variable "name" {

@@ -74,10 +74,9 @@ resource "aws_s3_bucket_lifecycle_configuration" "lifecycle_rule" {
           for_each = filter.value.tag != null ? [filter.value.tag] : []
 
           content {
-            key   = tag.key
-            value = tag.value
+            key   = tag.value.key
+            value = tag.value.value
           }
-
         }
       }
     }
