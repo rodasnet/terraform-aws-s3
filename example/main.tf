@@ -4,22 +4,22 @@ module "bucket" {
   name = "example-bucket-e4c3"
 }
 
-module "bucket_with_lifecycle_minimal" {
-  source = "../"
+# module "bucket_with_lifecycle_minimal" {
+#   source = "../"
 
-  name = "example-bucket-4u3d"
+#   name = "example-bucket-4u3d"
 
-  lifecycle_rules = [
-    {
-      id     = "example-rule-00"
-      status = "Enabled"
+#   lifecycle_rules = [
+#     {
+#       id     = "example-rule-00"
+#       status = "Enabled"
 
-      abort_incomplete_multipart_upload = {
-        days_after_initiation = 7
-      }
-    }
-  ]
-}
+#       abort_incomplete_multipart_upload = {
+#         days_after_initiation = 7
+#       }
+#     }
+#   ]
+# }
 
 module "bucket_with_lifecycle_09ik" {
   source = "../"
@@ -44,3 +44,28 @@ module "bucket_with_lifecycle_09ik" {
     }
   ]
 }
+
+# TODO: TEST lifecycle_rules with filter.and
+# module "bucket_with_lifecycle_and_block" {
+#   source = "../"
+
+#   name = "example-bucket-and-block1"
+
+#   lifecycle_rules = [
+#     {
+#       id     = "rule-andbolck1"
+#       status = "Enabled"
+#       filter = {
+#         and = {
+#           key   = "example-key"
+#           value = "example-value"
+#         }
+#       }
+#       expiration = {
+#         # TODO: Fix date input format
+#         # date = "2023-01-13T00:00:00Z"
+#         days = 30
+#       }
+#     }
+#   ]
+# }
