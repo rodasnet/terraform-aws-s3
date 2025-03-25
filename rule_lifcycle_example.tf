@@ -21,52 +21,9 @@ resource "aws_s3_bucket_lifecycle_configuration" "lifecycle_rule" {
       }
     }
 
-    # dynamic "filter" {
-    #   for_each = try(each.value.filter, null) != null && (
-    #     try(each.value.filter.prefix, null) != null ||
-    #     try(each.value.filter.tag, null) != null ||
-    #     try(each.value.filter.object_size_greater_than, null) != null ||
-    #     try(each.value.filter.object_size_less_than, null) != null
-    #   ) ? [each.value.filter] : []
-
-    #   content {
-    #     prefix = filter.value.prefix
-
-    #     dynamic "tag" {
-    #       for_each = filter.value.tag != null ? [filter.value.tag] : []
-    #       content {
-    #         key   = tag.value.key
-    #         value = tag.value.value
-    #       }
-    #     }
-    #   }
-    # }
-
-    # Filter block Copilot example
-    # dynamic "filter" {
-    #   for_each = each.value.filter != null && (
-    #     each.value.filter.prefix != null ||
-    #     each.value.filter.tag != null ||
-    #     each.value.filter.object_size_greater_than != null ||
-    #     each.value.filter.object_size_less_than != null
-    #   ) ? [each.value.filter] : []
-
-    #   content {
-    #     prefix = filter.value.prefix
-
-    #     dynamic "tag" {
-    #       for_each = filter.value.tag != null ? [filter.value.tag] : []
-    #       content {
-    #         key   = tag.value.key
-    #         value = tag.value.value
-    #       }
-    #     }
-    #   }
-    # }
-
     # Filter block simple example
     dynamic "filter" {
-      for_each = each.value.filter != null ? [each.value.filter] : []
+      for_each = (each.value.filter != null && try(each.value.filter.tag, null) != null) ? [each.value.filter] : []
       content {
         prefix = filter.value.prefix
 
@@ -76,6 +33,24 @@ resource "aws_s3_bucket_lifecycle_configuration" "lifecycle_rule" {
           content {
             key   = tag.value.key
             value = tag.value.value
+          }
+        }
+      }
+    }
+
+    dynamic "filter" { 
+      for_each = (each.value.filter != null && try(each.value.filter.and, null) != null) ? [each.value.filter] : []
+
+      content {
+        dynamic "and" {
+
+          for_each = filter.value.and != null ? [filter.value.and] : []
+
+          content {
+            prefix                   = and.value.prefix != null ? and.value.prefix : null
+            tags                     = and.value.tags != null ? and.value.tags : null
+            object_size_greater_than = and.value.object_size_greater_than != null ? and.value.object_size_greater_than : null
+            object_size_less_than    = and.value.object_size_less_than != null ? and.value.object_size_less_than : null
           }
         }
       }

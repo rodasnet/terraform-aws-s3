@@ -40,35 +40,35 @@ module "bucket_with_lifecycle_prefix" {
   ]
 }
 
-module "bucket_with_lifecycle_09ik" {
-  source = "../"
-
-  name = "example-bucket-09ik"
-
-  lifecycle_rules = [
-    {
-      id     = "rule-09ik"
-      status = "Enabled"
-      filter = {
-        tag = {
-          key   = "example-key"
-          value = "example-value"
-        }
-      }
-      expiration = {
-        # TODO: Fix date input format
-        # date = "2023-01-13T00:00:00Z"
-        days = 30
-      }
-    }
-  ]
-}
-
-# TODO: TEST lifecycle_rules with filter.and
-# module "bucket_with_lifecycle_and_block" {
+# module "bucket_with_lifecycle_09ik" {
 #   source = "../"
 
-#   name = "example-bucket-and-block1"
+#   name = "example-bucket-09ik"
+
+#   lifecycle_rules = [
+#     {
+#       id     = "rule-09ik"
+#       status = "Enabled"
+#       filter = {
+#         tag = {
+#           key   = "example-key"
+#           value = "example-value"
+#         }
+#       }
+#       expiration = {
+#         # TODO: Fix date input format
+#         # date = "2023-01-13T00:00:00Z"
+#         days = 30
+#       }
+#     }
+#   ]
+# }
+
+# TODO: TEST lifecycle_rules with filter.and
+# module "bucket_with_lifecycle_filter_and" {
+#   source = "../"
+
+#   name = "example-bucket-filterand1"
 
 #   lifecycle_rules = [
 #     {
@@ -76,6 +76,7 @@ module "bucket_with_lifecycle_09ik" {
 #       status = "Enabled"
 #       filter = {
 #         and = {
+#           prefix = "log/"
 #           tags = {
 #             Key1 = "Value1"
 #             Key2 = "Value2"

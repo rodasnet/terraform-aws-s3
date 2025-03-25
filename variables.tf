@@ -56,59 +56,29 @@ variable "lifecycle_rules" {
     error_message = "When a filter with 'prefix' is configured other conditions are not allowed, i.e.: 'tag', 'object_size_greater_than', 'object_size_less_than', or 'and' cannot also be specified."
   }
 
-  # validation {
-  #   condition = alltrue([
-  #     for rule in var.lifecycle_rules : (
-  #       rule == null || try(rule.filter.prefix, null) == null ||
-  #       (
-  #         # true
-  #         try(rule.filter.prefix, null) != null && try(rule.filter.tag, null) == null && try(rule.filter.object_size_greater_than, null) == null && try(rule.filter.object_size_less_than, null) == null && try(rule.filter.and, null) == null
-  #         # rule.filter.prefix != null && rule.filter.tag == null && rule.filter.object_size_greater_than == null && rule.filter.object_size_less_than == null && rule.filter.and == null
-  #       )
-  #     )
-  #   ])
-  #   error_message = "When the filter block is configured with a 'prefix' other conditions are not allowed, i.e.: 'tag', 'object_size_greater_than', 'object_size_less_than', or 'and' specified."
-  # }
+  validation {
+    condition = alltrue([
+      for rule in var.lifecycle_rules : (
+        rule == null || try(rule.filter.tag, null) == null ||
+        (
+          try(rule.filter.tag, null) != null && try(rule.filter.prefix, null) == null && try(rule.filter.object_size_greater_than, null) == null && try(rule.filter.object_size_less_than, null) == null && try(rule.filter.and, null) == null
+        )
+      )
+    ])
+    error_message = "When a filter with 'tag' is configured other conditions are not allowed, i.e.: 'prefix', 'object_size_greater_than', 'object_size_less_than', or 'and' cannot also be specified."
+  }
 
-  # validation {
-  #   condition = alltrue([
-  #     for rule in var.lifecycle_rules : (
-  #       rule == null || rule.filter.tag == null ||
-  #       (
-  #         rule.filter.tag != null && rule.filter.prefix == null && rule.filter.object_size_greater_than == null && rule.filter.object_size_less_than == null && rule.filter.and == null
-  #       )
-  #     )
-  #   ])
-  #   error_message = "When the filter block is configured with a 'tag' other conditions are not allowed, i.e.: 'prefix', 'object_size_greater_than', 'object_size_less_than', or 'and' specified."
-  # }
-
-  # validation {
-  #   condition = alltrue([
-  #     for rule in var.lifecycle_rules : (
-  #       # Only ONE of the filter options can be specified
-  #       rule == null || (
-  #         rule.filter.prefix != null || rule.filter.tag != null || rule.filter.object_size_greater_than != null || rule.filter.object_size_less_than != null || rule.filter.and != null
-  #       )
-  #       )
-  #     )
-  #   ])
-  #   error_message = "Each filter block must either be empty or have exactly one of 'prefix', 'tag', 'object_size_greater_than', 'object_size_less_than', or 'and' specified."
-  # }
-  # validation {
-  #   condition = alltrue([
-  #     for rule in var.lifecycle_rules : (
-  #       rule == null || (length(compact([
-  #         try((rule.filter.prefix != null), null),
-  #         try((rule.filter.tag != null), null),
-  #         try((rule.filter.object_size_greater_than != null), null),
-  #         try((rule.filter.object_size_less_than != null), null),
-  #         try((rule.filter.and != null), null)
-  #         ])) < 2
-  #       )
-  #     )
-  #   ])
-  #   error_message = "Each filter block must either be empty or have exactly one of 'prefix', 'tag', 'object_size_greater_than', 'object_size_less_than', or 'and' specified."
-  # }
+  validation {
+    condition = alltrue([
+      for rule in var.lifecycle_rules : (
+        rule == null || try(rule.filter.object_size_greater_than, null) == null ||
+        (
+          try(rule.filter.object_size_greater_than, null) != null && try(rule.filter.prefix, null) == null && try(rule.filter.tag, null) == null && try(rule.filter.object_size_less_than, null) == null && try(rule.filter.and, null) == null
+        )
+      )
+    ])
+    error_message = "When a filter with 'object_size_greater_than' is configured other conditions are not allowed, i.e.: 'prefix', 'tag', 'object_size_less_than', or 'and' cannot also be specified."
+  }
 }
 
 variable "name" {
