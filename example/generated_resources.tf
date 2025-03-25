@@ -86,3 +86,26 @@ resource "aws_s3_bucket_lifecycle_configuration" "spaghettimaghetti2" {
     }
   }
 }
+
+resource "aws_s3_bucket" "spaghettimaghetti3" {
+  bucket = "spaghettimaghetti3"
+}
+
+resource "aws_s3_bucket_lifecycle_configuration" "spaghettimaghetti3" {
+  bucket = aws_s3_bucket.spaghettimaghetti3.id
+
+  rule {
+    id = "Allow small object transitions"
+
+    filter {
+      object_size_greater_than = 1
+    }
+
+    status = "Enabled"
+
+    transition {
+      days          = 365
+      storage_class = "GLACIER_IR"
+    }
+  }
+}

@@ -4,22 +4,41 @@ module "bucket" {
   name = "example-bucket-e4c3"
 }
 
-# module "bucket_with_lifecycle_minimal" {
-#   source = "../"
+module "bucket_with_lifecycle_minimal" {
+  source = "../"
 
-#   name = "example-bucket-4u3d"
+  name = "example-bucket-4u3d"
 
-#   lifecycle_rules = [
-#     {
-#       id     = "example-rule-00"
-#       status = "Enabled"
+  lifecycle_rules = [
+    {
+      id     = "example-rule-00"
+      status = "Enabled"
 
-#       abort_incomplete_multipart_upload = {
-#         days_after_initiation = 7
-#       }
-#     }
-#   ]
-# }
+      abort_incomplete_multipart_upload = {
+        days_after_initiation = 7
+      }
+    }
+  ]
+}
+
+module "bucket_with_lifecycle_prefix" {
+  source = "../"
+
+  name = "example-bucket-prefix-3939"
+
+  lifecycle_rules = [
+    {
+      id     = "example-rule-00"
+      status = "Enabled"
+      filter = {
+        prefix = "/"
+      }
+      abort_incomplete_multipart_upload = {
+        days_after_initiation = 7
+      }
+    }
+  ]
+}
 
 module "bucket_with_lifecycle_09ik" {
   source = "../"
@@ -57,8 +76,10 @@ module "bucket_with_lifecycle_09ik" {
 #       status = "Enabled"
 #       filter = {
 #         and = {
-#           key   = "example-key"
-#           value = "example-value"
+#           tags = {
+#             Key1 = "Value1"
+#             Key2 = "Value2"
+#           }
 #         }
 #       }
 #       expiration = {
@@ -66,6 +87,49 @@ module "bucket_with_lifecycle_09ik" {
 #         # date = "2023-01-13T00:00:00Z"
 #         days = 30
 #       }
+#     }
+#   ]
+# }
+
+# module "bucket_with_lifecycle_vialation_tag_and_prefix" {
+#   source = "../"
+
+#   name = "example-bucket-tag-prefix-3j3j"
+
+#   lifecycle_rules = [
+#     {
+#       id     = "example-rule-00"
+#       status = "Enabled"
+#       filter = {
+#         tag = {
+#           key   = "example-key"
+#           value = "example-value"
+#         }
+#         prefix = "/"
+#       }
+#       abort_incomplete_multipart_upload = {
+#         days_after_initiation = 7
+#       }
+#     }
+#   ]
+# }
+
+# module "bucket_with_lifecycle_objsize" {
+#   source = "../"
+
+#   name = "example-bucket-objsize1"
+
+#   lifecycle_rules = [
+#     {
+#       id     = "example-rule-00"
+#       status = "Enabled"
+#       filter = {
+#         object_size_greater_than = 1
+#       }
+#       transition = [{
+#         days          = 365
+#         storage_class = "GLACIER_IR"
+#       }]
 #     }
 #   ]
 # }
