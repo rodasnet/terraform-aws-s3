@@ -36,6 +36,30 @@ variable "lifecycle_rules" {
   }))
   default = []
 
+  validation {
+    condition = alltrue([
+      for rule in var.lifecycle_rules : (
+        rule == null || rule.filter.prefix == null ||
+        (
+          rule.filter.prefix != null && rule.filter.tag == null && rule.filter.object_size_greater_than == null && rule.filter.object_size_less_than == null && rule.filter.and == null
+        )
+      )
+    ])
+    error_message = "When filter block is configured with a 'prefix' other conditions are not allowed, i.e.: 'tag', 'object_size_greater_than', 'object_size_less_than', or 'and' specified."
+  }
+
+  # validation {
+  #   condition = alltrue([
+  #     for rule in var.lifecycle_rules : (
+  #       # Only ONE of the filter options can be specified
+  #       rule == null || (
+  #         rule.filter.prefix != null || rule.filter.tag != null || rule.filter.object_size_greater_than != null || rule.filter.object_size_less_than != null || rule.filter.and != null
+  #       )
+  #       )
+  #     )
+  #   ])
+  #   error_message = "Each filter block must either be empty or have exactly one of 'prefix', 'tag', 'object_size_greater_than', 'object_size_less_than', or 'and' specified."
+  # }
   # validation {
   #   condition = alltrue([
   #     for rule in var.lifecycle_rules : (
