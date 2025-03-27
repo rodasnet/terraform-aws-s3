@@ -7,9 +7,10 @@ Default error and warnings are ambigous for lifecycle rule resources, this updat
 ### Example Misconfigured Module for Lifecycle Rule
 According to the AWS Terraform provider, the filter cannot contain both `tag` and `prefix` as they are mutually exclusive.
 
-> ### Penel
-> This is a panel
+> ### Filter Business Logic Limitations
+> The filter configuration block must either be specified as the empty configuration block (filter {}) or with exactly one of prefix, tag, and, object_size_greater_than or object_size_less_than specified.
 
+Source: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_lifecycle_configuration#filter
 ```terraform
 module "bucket_with_lifecycle_vialation_tag_and_prefix" {
   source = "../"
