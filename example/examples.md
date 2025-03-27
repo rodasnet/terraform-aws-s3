@@ -4,6 +4,33 @@
 
 Default error and warnings are ambigous for lifecycle rule resources, this update creates specific validation rules for each lifecycle rule scenario.
 
+### Example Misconfigured Module for Lifecycle Rule
+
+```terraform
+module "bucket_with_lifecycle_vialation_tag_and_prefix" {
+  source = "../"
+
+  name = "bucket-lifecycle-tag-prefix-3j3j"
+
+  lifecycle_rules = [
+    {
+      id     = "example-rule-00"
+      status = "Enabled"
+      filter = {
+        tag = {
+          key   = "example-key"
+          value = "example-value"
+        }
+        prefix = "/"
+      }
+      abort_incomplete_multipart_upload = {
+        days_after_initiation = 7
+      }
+    }
+  ]
+}
+```
+
 ### Default Terrafomr Warnings is Ambigous
 ```terraform
 ╷╷
