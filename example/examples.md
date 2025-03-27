@@ -1,7 +1,27 @@
 # S3 Buckets 
 
+## Lifecycle Rule Variable Validation
+
+Default error and warnings are ambigous for lifecycle rule resources, this update creates specific validation rules for each lifecycle rule scenario.
+
+### Default Terrafomr Warnings is Ambigous
 ```terraform
-╷
+╷╷
+│ Warning: Invalid Attribute Combination
+│
+│   with aws_s3_bucket_lifecycle_configuration.example,
+│   on main.tf line 10, in resource "aws_s3_bucket_lifecycle_configuration" "example":
+│   10:   rule {
+│
+│ No attribute specified when one (and only one) of [rule[0].prefix.<.filter] is required
+│
+│ This will be an error in a future version of the provider
+│
+│ (and one more similar warning elsewhere)
+```
+### Improved Terrafomr Warnings is Indicate Specific Filter That Need Correction
+
+```terraform
 │ Error: Invalid value for variable
 │
 │   on examples.tf line 117, in module "bucket_with_lifecycle_vialation_tag_and_prefix":
