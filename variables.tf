@@ -42,16 +42,9 @@ variable "lifecycle_rules" {
   validation {
     condition = alltrue([
       for rule in var.lifecycle_rules : (
-        # rule == null || rule.filter.prefix == null ||
-        # rule == null || (rule.filter != null && rule.filter.prefix == null) ||
-        # rule == null || rule.filter == null || try(rule.filter.prefix, null) == null ||
-        # rule == null || rule.filter == null || rule.filter.prefix == null ||
-        # rule == null || rule.filter == null || try(rule.filter.prefix, null)  == null ||
         rule == null || try(rule.filter.prefix, null) == null ||
         (
-          # true
           try(rule.filter.prefix, null) != null && try(rule.filter.tag, null) == null && try(rule.filter.object_size_greater_than, null) == null && try(rule.filter.object_size_less_than, null) == null && try(rule.filter.and, null) == null
-          # rule.filter.prefix != null && rule.filter.tag == null && rule.filter.object_size_greater_than == null && rule.filter.object_size_less_than == null && rule.filter.and == null
         )
       )
     ])
@@ -80,6 +73,18 @@ variable "lifecycle_rules" {
       )
     ])
     error_message = "When a filter with 'object_size_greater_than' is configured other conditions are not allowed, i.e.: 'prefix', 'tag', 'object_size_less_than', or 'and' cannot also be specified."
+  }
+
+  validation {
+    condition = alltrue([
+      for rule in var.lifecycle_rules : (
+        rule == null || try(rule.filter.object_size_less_than, null) == null ||
+        (
+          try(rule.filter.object_size_less_than, null) != null && try(rule.filter.prefix, null) == null && try(rule.filter.tag, null) == null && try(rule.filter.object_size_greater_than, null) == null && try(rule.filter.and, null) == null
+        )
+      )
+    ])
+    error_message = "When a filter with 'object_size_less_than' is configured other conditions are not allowed, i.e.: 'prefix', 'tag', 'object_size_greater_than', or 'and' cannot also be specified."
   }
 }
 

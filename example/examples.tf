@@ -109,28 +109,7 @@ module "bucket_with_lifecycle_and" {
   ]
 }
 
-module "bucket_with_lifecycle_vialation_tag_and_prefix" {
-  source = "../"
 
-  name = "bucket-lifecycle-tag-prefix-3j3j"
-
-  lifecycle_rules = [
-    {
-      id     = "example-rule-00"
-      status = "Enabled"
-      filter = {
-        tag = {
-          key   = "example-key"
-          value = "example-value"
-        }
-        prefix = "/"
-      }
-      abort_incomplete_multipart_upload = {
-        days_after_initiation = 7
-      }
-    }
-  ]
-}
 
 # TODO: TEST lifecycle_rules with filter.objsize
 # module "bucket_with_lifecycle_objsize" {
