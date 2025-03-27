@@ -15,7 +15,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "configuration" {
     content {
       id     = rule.value.id
       status = rule.value.status
-      
+
       # When filter is empty provide default prefix of root "/" and empty tag
       dynamic "filter" {
         for_each = rule.value.filter == null ? [{
@@ -26,6 +26,13 @@ resource "aws_s3_bucket_lifecycle_configuration" "configuration" {
         }
       }
 
+      # Filter block simple example
+      dynamic "filter" {
+        for_each = (rule.value.filter != null && try(rule.value.filter.prefix, null) != null) ? [rule.value.filter] : []
+        content {
+          prefix = filter.value.prefix
+        }
+      }
       # Filter block simple example
       dynamic "filter" {
         for_each = (rule.value.filter != null && try(rule.value.filter.tag, null) != null) ? [rule.value.filter] : []
