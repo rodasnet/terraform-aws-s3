@@ -109,25 +109,23 @@ module "bucket_with_lifecycle_and" {
   ]
 }
 
-
-
 # TODO: TEST lifecycle_rules with filter.objsize
-# module "bucket_with_lifecycle_objsize" {
-#   source = "../"
+module "bucket_with_lifecycle_objsize" {
+  source = "../"
 
-#   name = "bucket-lifecycle-objsize1"
+  name = "bucket-lifecycle-objsize1"
 
-#   lifecycle_rules = [
-#     {
-#       id     = "example-rule-00"
-#       status = "Enabled"
-#       filter = {
-#         object_size_greater_than = 1
-#       }
-#       transition = [{
-#         days          = 365
-#         storage_class = "GLACIER_IR"
-#       }]
-#     }
-#   ]
-# }
+  lifecycle_rules = [
+    {
+      id     = "rule-objsize1"
+      status = "Enabled"
+      filter = {
+        object_size_greater_than = 1
+      }
+      transition = [{
+        days          = 365
+        storage_class = "GLACIER_IR"
+      }]
+    }
+  ]
+}
