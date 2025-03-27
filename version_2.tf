@@ -26,18 +26,20 @@ resource "aws_s3_bucket_lifecycle_configuration" "configuration" {
         }
       }
 
-      # Filter block simple example
+      # Scenario where filter block has filter.prefix
       dynamic "filter" {
         for_each = (rule.value.filter != null && try(rule.value.filter.prefix, null) != null) ? [rule.value.filter] : []
         content {
           prefix = filter.value.prefix
         }
       }
-      # Filter block simple example
+
+      # Scenario where filter block has filter.tag
       dynamic "filter" {
         for_each = (rule.value.filter != null && try(rule.value.filter.tag, null) != null) ? [rule.value.filter] : []
         content {
-          prefix = filter.value.prefix
+        # TODO: TEST if prefix is required in this scenario
+        #   prefix = filter.value.prefix
 
           dynamic "tag" {
             for_each = filter.value.tag != null ? [filter.value.tag] : []
@@ -50,6 +52,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "configuration" {
         }
       }
 
+      # Scenario where filter block has filter.and
       dynamic "filter" {
         for_each = (rule.value.filter != null && try(rule.value.filter.and, null) != null) ? [rule.value.filter] : []
 

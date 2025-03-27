@@ -65,32 +65,32 @@ module "bucket_with_lifecycle_tag" {
 }
 
 # TODO: TEST lifecycle_rules with filter.and
-# module "bucket_with_lifecycle_filter_and" {
-#   source = "../"
+module "bucket_with_lifecycle_filter_and" {
+  source = "../"
 
-#   name = "example-bucket-filterand1"
+  name = "example-bucket-ba04"
 
-#   lifecycle_rules = [
-#     {
-#       id     = "rule-andbolck1"
-#       status = "Enabled"
-#       filter = {
-#         and = {
-#           prefix = "log/"
-#           tags = {
-#             Key1 = "Value1"
-#             Key2 = "Value2"
-#           }
-#         }
-#       }
-#       expiration = {
-#         # TODO: Fix date input format
-#         # date = "2023-01-13T00:00:00Z"
-#         days = 30
-#       }
-#     }
-#   ]
-# }
+  lifecycle_rules = [
+    {
+      id     = "rule-ba04"
+      status = "Enabled"
+      filter = {
+        and = {
+          prefix = "log/"
+          tags = {
+            Key1 = "Value1"
+            Key2 = "Value2"
+          }
+        }
+      }
+      expiration = {
+        # TODO: Fix date input format
+        # date = "2023-01-13T00:00:00Z"
+        days = 30
+      }
+    }
+  ]
+}
 
 # module "bucket_with_lifecycle_vialation_tag_and_prefix" {
 #   source = "../"
