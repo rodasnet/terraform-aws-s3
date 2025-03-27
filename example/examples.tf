@@ -11,11 +11,11 @@ module "bucket_with_lifecycle_minimal" {
 
   lifecycle_rules = [
     {
-      id     = "example-rule-00"
+      id     = "example-rule-4u3d"
       status = "Enabled"
 
       abort_incomplete_multipart_upload = {
-        days_after_initiation = 7
+        days_after_initiation = 6
       }
     }
   ]
@@ -28,13 +28,13 @@ module "bucket_with_lifecycle_prefix" {
 
   lifecycle_rules = [
     {
-      id     = "example-rule-00"
+      id     = "example-rule-3939"
       status = "Enabled"
       filter = {
         prefix = "/"
       }
       abort_incomplete_multipart_upload = {
-        days_after_initiation = 7
+        days_after_initiation = 8
       }
     }
   ]
