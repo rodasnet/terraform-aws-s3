@@ -5,6 +5,10 @@
 Default error and warnings are ambigous for lifecycle rule resources, this update creates specific validation rules for each lifecycle rule scenario.
 
 ### Example Misconfigured Module for Lifecycle Rule
+According to the AWS Terraform provider, the filter cannot contain both `tag` and `prefix` as they are mutually exclusive.
+
+> ### Penel
+> This is a panel
 
 ```terraform
 module "bucket_with_lifecycle_vialation_tag_and_prefix" {
