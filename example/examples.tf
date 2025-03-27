@@ -88,32 +88,49 @@ module "bucket_with_lifecycle_and" {
         # date = "2023-01-13T00:00:00Z"
         days = 30
       }
+    },
+    {
+      id     = "rule-and-ba05"
+      status = "Enabled"
+      filter = {
+        and = {
+          tags = {
+            Key1 = "Value1"
+            Key2 = "Value2"
+          }
+        }
+      }
+      expiration = {
+        # TODO: Fix date input format
+        # date = "2023-01-13T00:00:00Z"
+        days = 30
+      }
     }
   ]
 }
 
-# module "bucket_with_lifecycle_vialation_tag_and_prefix" {
-#   source = "../"
+module "bucket_with_lifecycle_vialation_tag_and_prefix" {
+  source = "../"
 
-#   name = "bucket-lifecycle-tag-prefix-3j3j"
+  name = "bucket-lifecycle-tag-prefix-3j3j"
 
-#   lifecycle_rules = [
-#     {
-#       id     = "example-rule-00"
-#       status = "Enabled"
-#       filter = {
-#         tag = {
-#           key   = "example-key"
-#           value = "example-value"
-#         }
-#         prefix = "/"
-#       }
-#       abort_incomplete_multipart_upload = {
-#         days_after_initiation = 7
-#       }
-#     }
-#   ]
-# }
+  lifecycle_rules = [
+    {
+      id     = "example-rule-00"
+      status = "Enabled"
+      filter = {
+        tag = {
+          key   = "example-key"
+          value = "example-value"
+        }
+        prefix = "/"
+      }
+      abort_incomplete_multipart_upload = {
+        days_after_initiation = 7
+      }
+    }
+  ]
+}
 
 # TODO: TEST lifecycle_rules with filter.objsize
 # module "bucket_with_lifecycle_objsize" {

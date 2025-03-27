@@ -11,8 +11,10 @@ variable "lifecycle_rules" {
       object_size_greater_than = optional(number)
       object_size_less_than    = optional(number)
       and = optional(object({
-        prefix = optional(string)
-        tags   = optional(map(string))
+        prefix                   = optional(string)
+        tags                     = optional(map(string))
+        object_size_greater_than = optional(number)
+        object_size_less_than    = optional(number)
       }))
     }))
     expiration = optional(object({     # Optional: Specifies expiration configuration
