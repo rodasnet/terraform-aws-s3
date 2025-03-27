@@ -1,17 +1,17 @@
 module "bucket" {
   source = "../"
 
-  name = "example-bucket-e4c3"
+  name = "bucket-lifecycle-none-e4c3"
 }
 
-module "bucket_with_lifecycle_minimal" {
+module "bucket_with_lifecycle_default" {
   source = "../"
 
-  name = "example-bucket-4u3d"
+  name = "bucket-lifecycle-default-4u3d"
 
   lifecycle_rules = [
     {
-      id     = "example-rule-4u3d"
+      id     = "rule-default-4u3d"
       status = "Enabled"
 
       abort_incomplete_multipart_upload = {
@@ -24,11 +24,11 @@ module "bucket_with_lifecycle_minimal" {
 module "bucket_with_lifecycle_prefix" {
   source = "../"
 
-  name = "example-bucket-prefix-3939"
+  name = "bucket-lifecycle-prefix-3939"
 
   lifecycle_rules = [
     {
-      id     = "example-rule-3939"
+      id     = "rule-prefix-3939"
       status = "Enabled"
       filter = {
         prefix = "/"
@@ -44,11 +44,11 @@ module "bucket_with_lifecycle_prefix" {
 module "bucket_with_lifecycle_tag" {
   source = "../"
 
-  name = "example-bucket-09ik"
+  name = "bucket-lifecycle-tag-09ik"
 
   lifecycle_rules = [
     {
-      id     = "rule-09ik"
+      id     = "rule-tag-09ik"
       status = "Enabled"
       filter = {
         tag = {
@@ -65,42 +65,37 @@ module "bucket_with_lifecycle_tag" {
   ]
 }
 
+module "bucket_with_lifecycle_and" {
+  source = "../"
 
+  name = "bucket-lifecycle-and-ba04"
 
-# NOT WORKING ####################
-############################################
-# TODO: TEST lifecycle_rules with filter.and
-# module "bucket_with_lifecycle_filter_and" {
-#   source = "../"
-
-#   name = "example-bucket-ba04"
-
-#   lifecycle_rules = [
-#     {
-#       id     = "rule-ba04"
-#       status = "Enabled"
-#       filter = {
-#         and = {
-#           prefix = "log/"
-#           tags = {
-#             Key1 = "Value1"
-#             Key2 = "Value2"
-#           }
-#         }
-#       }
-#       expiration = {
-#         # TODO: Fix date input format
-#         # date = "2023-01-13T00:00:00Z"
-#         days = 30
-#       }
-#     }
-#   ]
-# }
+  lifecycle_rules = [
+    {
+      id     = "rule-and-ba04"
+      status = "Enabled"
+      filter = {
+        and = {
+          prefix = "log/"
+          tags = {
+            Key1 = "Value1"
+            Key2 = "Value2"
+          }
+        }
+      }
+      expiration = {
+        # TODO: Fix date input format
+        # date = "2023-01-13T00:00:00Z"
+        days = 30
+      }
+    }
+  ]
+}
 
 # module "bucket_with_lifecycle_vialation_tag_and_prefix" {
 #   source = "../"
 
-#   name = "example-bucket-tag-prefix-3j3j"
+#   name = "bucket-lifecycle-tag-prefix-3j3j"
 
 #   lifecycle_rules = [
 #     {
@@ -124,7 +119,7 @@ module "bucket_with_lifecycle_tag" {
 # module "bucket_with_lifecycle_objsize" {
 #   source = "../"
 
-#   name = "example-bucket-objsize1"
+#   name = "bucket-lifecycle-objsize1"
 
 #   lifecycle_rules = [
 #     {

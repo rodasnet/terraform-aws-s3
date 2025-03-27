@@ -38,9 +38,6 @@ resource "aws_s3_bucket_lifecycle_configuration" "configuration" {
       dynamic "filter" {
         for_each = (rule.value.filter != null && try(rule.value.filter.tag, null) != null) ? [rule.value.filter] : []
         content {
-        # TODO: TEST if prefix is required in this scenario
-        #   prefix = filter.value.prefix
-
           dynamic "tag" {
             for_each = filter.value.tag != null ? [filter.value.tag] : []
 
@@ -53,23 +50,22 @@ resource "aws_s3_bucket_lifecycle_configuration" "configuration" {
       }
 
       # Scenario where filter block has filter.and
-    #   dynamic "filter" {
-    #     for_each = (rule.value.filter != null && try(rule.value.filter.and, null) != null) ? [rule.value.filter] : []
+      dynamic "filter" {
+        for_each = (rule.value.filter != null && try(rule.value.filter.and, null) != null) ? [rule.value.filter] : []
+        content {
+          dynamic "and" {
 
-    #     content {
-    #       dynamic "and" {
+            for_each = filter.value.and != null ? [filter.value.and] : []
 
-    #         for_each = filter.value.and != null ? [filter.value.and] : []
-
-    #         content {
-    #           prefix                   = and.value.prefix != null ? and.value.prefix : null
-    #           tags                     = and.value.tags != null ? and.value.tags : null
-    #           object_size_greater_than = and.value.object_size_greater_than != null ? and.value.object_size_greater_than : null
-    #           object_size_less_than    = and.value.object_size_less_than != null ? and.value.object_size_less_than : null
-    #         }
-    #       }
-    #     }
-    #   }
+            content {
+              prefix                   = and.value.prefix != null ? and.value.prefix : null
+              tags                     = and.value.tags != null ? and.value.tags : null
+              object_size_greater_than = and.value.object_size_greater_than != null ? and.value.object_size_greater_than : null
+              object_size_less_than    = and.value.object_size_less_than != null ? and.value.object_size_less_than : null
+            }
+          }
+        }
+      }
 
 
       #   Combined filter block
