@@ -40,29 +40,29 @@ module "bucket_with_lifecycle_prefix" {
   ]
 }
 
-# module "bucket_with_lifecycle_09ik" {
-#   source = "../"
+module "bucket_with_lifecycle_tag" {
+  source = "../"
 
-#   name = "example-bucket-09ik"
+  name = "example-bucket-09ik"
 
-#   lifecycle_rules = [
-#     {
-#       id     = "rule-09ik"
-#       status = "Enabled"
-#       filter = {
-#         tag = {
-#           key   = "example-key"
-#           value = "example-value"
-#         }
-#       }
-#       expiration = {
-#         # TODO: Fix date input format
-#         # date = "2023-01-13T00:00:00Z"
-#         days = 30
-#       }
-#     }
-#   ]
-# }
+  lifecycle_rules = [
+    {
+      id     = "rule-09ik"
+      status = "Enabled"
+      filter = {
+        tag = {
+          key   = "example-key"
+          value = "example-value"
+        }
+      }
+      expiration = {
+        # TODO: Fix date input format
+        # date = "2023-01-13T00:00:00Z"
+        days = 30
+      }
+    }
+  ]
+}
 
 # TODO: TEST lifecycle_rules with filter.and
 # module "bucket_with_lifecycle_filter_and" {
