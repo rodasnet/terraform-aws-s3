@@ -129,3 +129,50 @@ module "bucket_with_lifecycle_objsize" {
     }
   ]
 }
+
+resource "aws_s3_bucket" "versioning_bucket" {
+  bucket = "8383-versioning-bucket"
+}
+
+resource "aws_s3_bucket_versioning" "versioning" {
+  bucket = aws_s3_bucket.versioning_bucket.id
+  versioning_configuration {
+    status = "Enabled"
+  }
+}
+
+resource "aws_s3_bucket_lifecycle_configuration" "versioning-bucket-config" {
+  # Must have bucket versioning enabled first
+  depends_on = [aws_s3_bucket_versioning.versioning]
+
+  bucket = aws_s3_bucket.versioning_bucket.id
+
+  rule {
+    id = "config"
+
+    filter {
+      prefix = "config/"
+    }
+
+    # noncurrent_version_expiration {
+    #   noncurrent_days = 90
+    # }
+
+    noncurrent_version_expiration {
+      noncurrent_days = 180
+      newer_noncurrent_versions = 1
+    }
+
+    noncurrent_version_transition {
+      noncurrent_days = 30
+      storage_class   = "STANDARD_IA"
+    }
+
+    noncurrent_version_transition {
+      noncurrent_days = 60
+      storage_class   = "GLACIER"
+    }
+
+    status = "Enabled"
+  }
+}
