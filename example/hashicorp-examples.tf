@@ -50,7 +50,13 @@ resource "aws_s3_bucket_lifecycle_configuration" "bucket-config" {
     }
 
     expiration {
-      date = "2023-01-13T00:00:00Z"
+      # date = "2026-01-13T00:00:00Z"
+      # date = formatdate("YYYY-MM-DD",  "2027-01-13T")
+      # date = formatdate("YYYY-MM-DDT00:00:00Z", "2026-01-13")
+
+      # date = "${"2026-01-13"}T00:00:00Z"
+      date = local.formatted_date
+      # date = "2026-01-13"
     }
 
     status = "Enabled"
