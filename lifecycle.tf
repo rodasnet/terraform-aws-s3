@@ -74,12 +74,12 @@ resource "aws_s3_bucket_lifecycle_configuration" "configuration" {
           object_size_greater_than = filter.value.object_size_greater_than
         }
       }
-      
+
       # Scenario where filter block has filter.object_size_less_than
       dynamic "filter" {
-        for_each = (rule.value.filter != null && try(rule.value.filter.object_size_less_than , null) != null) ? [rule.value.filter] : []
+        for_each = (rule.value.filter != null && try(rule.value.filter.object_size_less_than, null) != null) ? [rule.value.filter] : []
         content {
-          object_size_less_than  = filter.value.object_size_less_than 
+          object_size_less_than = filter.value.object_size_less_than
         }
       }
 
