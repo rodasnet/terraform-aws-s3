@@ -1,4 +1,3 @@
-/*
 module "bucket" {
   source = "../"
 
@@ -41,7 +40,6 @@ module "bucket_with_lifecycle_prefix" {
   ]
 }
 
-
 module "bucket_with_lifecycle_tag" {
   source = "../"
 
@@ -58,8 +56,6 @@ module "bucket_with_lifecycle_tag" {
         }
       }
       expiration = {
-        # TODO: Fix date input format
-        # date = "2023-01-13T00:00:00Z"
         days = 30
       }
     }
@@ -85,8 +81,6 @@ module "bucket_with_lifecycle_and" {
         }
       }
       expiration = {
-        # TODO: Fix date input format
-        # date = "2023-01-13T00:00:00Z"
         days = 30
       }
     },
@@ -102,15 +96,12 @@ module "bucket_with_lifecycle_and" {
         }
       }
       expiration = {
-        # TODO: Fix date input format
-        # date = "2023-01-13T00:00:00Z"
         days = 30
       }
     }
   ]
 }
 
-# TODO: TEST lifecycle_rules with filter.objsize
 module "bucket_with_lifecycle_objsize" {
   source = "../"
 
@@ -131,6 +122,10 @@ module "bucket_with_lifecycle_objsize" {
   ]
 }
 
+# The module always manages its own bucket (aws_s3_bucket.example, scoped to
+# var.name), so a lifecycle rule targeting a versioned, externally-created
+# bucket needs its own aws_s3_bucket_lifecycle_configuration outside the
+# module - versioning isn't exposed as a module input.
 resource "aws_s3_bucket" "versioning_bucket" {
   bucket = "8383-versioning-bucket"
 }
@@ -142,8 +137,7 @@ resource "aws_s3_bucket_versioning" "versioning" {
   }
 }
 
-resource "aws_s3_bucket_lifecycle_configuration" "versioning-bucket-config" {
-  # Must have bucket versioning enabled first
+resource "aws_s3_bucket_lifecycle_configuration" "versioning_bucket_config" {
   depends_on = [aws_s3_bucket_versioning.versioning]
 
   bucket = aws_s3_bucket.versioning_bucket.id
@@ -155,12 +149,8 @@ resource "aws_s3_bucket_lifecycle_configuration" "versioning-bucket-config" {
       prefix = "config/"
     }
 
-    # noncurrent_version_expiration {
-    #   noncurrent_days = 90
-    # }
-
     noncurrent_version_expiration {
-      noncurrent_days = 180
+      noncurrent_days           = 180
       newer_noncurrent_versions = 1
     }
 
@@ -177,6 +167,3 @@ resource "aws_s3_bucket_lifecycle_configuration" "versioning-bucket-config" {
     status = "Enabled"
   }
 }
-
-*/
-
